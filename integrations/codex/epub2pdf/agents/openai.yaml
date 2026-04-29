@@ -1,0 +1,4 @@
+interface:
+  display_name: "EPUB to PDF"
+  short_description: "Convert EPUBs and extract PDF Markdown"
+  default_prompt: "Use $epub2pdf to inspect or convert EPUBs, and extract Markdown/JSON from PDFs when helpful."

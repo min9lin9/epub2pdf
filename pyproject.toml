@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "epub2pdf"
+version = "0.1.0"
+description = "Local CLI to convert EPUB files into machine-readable PDFs."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+  {name = "OpenAI Codex"}
+]
+dependencies = [
+  "beautifulsoup4>=4.12",
+  "lxml>=4.9",
+  "playwright>=1.58.0",
+  "pypdf>=5.4.0",
+]
+
+[project.optional-dependencies]
+pdf = [
+  "opendataloader-pdf>=2.4.0",
+]
+weasyprint = [
+  "weasyprint>=62.0",
+]
+
+[project.scripts]
+epub2pdf = "epub2pdf_cli.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
