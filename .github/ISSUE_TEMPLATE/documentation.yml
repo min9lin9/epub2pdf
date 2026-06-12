@@ -1,0 +1,27 @@
+name: Documentation
+description: Report missing, unclear, or incorrect documentation
+labels: ["type: docs"]
+body:
+  - type: input
+    id: location
+    attributes:
+      label: Document location
+      placeholder: "e.g., README.md / docs/architecture/overview.md"
+    validations:
+      required: true
+  - type: textarea
+    id: reason
+    attributes:
+      label: Why does this need to change?
+      description: Explain what is missing, unclear, or incorrect.
+    validations:
+      required: true
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested wording or change
+  - type: textarea
+    id: related
+    attributes:
+      label: Related code or feature
+      description: Link the issue, PR, or source file this documentation refers to.

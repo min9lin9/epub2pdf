@@ -4,34 +4,95 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "epub2pdf"
-version = "0.1.0"
+version = "0.3.0"
 description = "Local CLI to convert EPUB files into machine-readable PDFs."
 readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "MIT"}
 authors = [
-  {name = "OpenAI Codex"}
+  {name = "min9lin9"}
 ]
 dependencies = [
   "beautifulsoup4>=4.12",
   "lxml>=4.9",
-  "playwright>=1.58.0",
   "pypdf>=5.4.0",
+  "pypdfium2>=4.30.0",
 ]
 
 [project.optional-dependencies]
-pdf = [
-  "opendataloader-pdf>=2.4.0",
-]
 weasyprint = [
   "weasyprint>=62.0",
+]
+playwright = [
+  "playwright>=1.58.0",
+]
+docling = [
+  "docling>=2.0.0",
+]
+pdfplumber = [
+  "pdfplumber>=0.11.0",
+]
+legacy-pdf = [
+  "opendataloader-pdf>=2.4.0",
+]
+mcp = [
+  "mcp>=1.0.0",
+]
+dev = [
+  "ruff>=0.6.0",
+  "mypy>=1.11.0",
+  "pytest-cov>=6.0.0",
+]
+all = [
+  "weasyprint>=62.0",
+  "playwright>=1.58.0",
+  "docling>=2.0.0",
+  "pdfplumber>=0.11.0",
+  "mcp>=1.0.0",
 ]
 
 [project.scripts]
 epub2pdf = "epub2pdf_cli.cli:main"
+epub2pdf-mcp = "epub2pdf_cli.mcp_server:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 120
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = [
+  "E",
+  "F",
+  "I",
+  "W",
+  "UP",
+  "B",
+  "C4",
+  "SIM",
+]
+ignore = [
+  "E501",  # line too long; we rely on formatter instead
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_ignores = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+ignore_missing_imports = true
+exclude = [
+  "^src/epub2pdf_cli/__pycache__/",
+]

@@ -1,37 +1,37 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 
-@dataclass(slots=True)
+@dataclass(frozen=True, slots=True)
 class ManifestItem:
     id: str
     href: str
     media_type: str
-    properties: List[str] = field(default_factory=list)
-    fallback: Optional[str] = None
+    properties: tuple[str, ...] = ()
+    fallback: str | None = None
     content: bytes = b""
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "id": self.id,
             "href": self.href,
             "media_type": self.media_type,
-            "properties": self.properties,
+            "properties": list(self.properties),
             "fallback": self.fallback,
             "size_bytes": len(self.content),
         }
 
 
-@dataclass(slots=True)
+@dataclass(frozen=True, slots=True)
 class SpineItem:
     idref: str
     href: str
     media_type: str
     linear: bool = True
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "idref": self.idref,
             "href": self.href,
@@ -40,13 +40,13 @@ class SpineItem:
         }
 
 
-@dataclass(slots=True)
+@dataclass(frozen=True, slots=True)
 class TocEntry:
     title: str
     href: str
-    children: List["TocEntry"] = field(default_factory=list)
+    children: list[TocEntry] = field(default_factory=list)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "title": self.title,
             "href": self.href,
@@ -54,7 +54,7 @@ class TocEntry:
         }
 
 
-@dataclass(slots=True)
+@dataclass(frozen=True, slots=True)
 class Chapter:
     idref: str
     href: str
@@ -64,7 +64,7 @@ class Chapter:
     text: str
     linear: bool = True
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         text = self.text.strip()
         return {
             "idref": self.idref,
@@ -78,27 +78,30 @@ class Chapter:
         }
 
 
-@dataclass(slots=True)
+@dataclass(frozen=True, slots=True)
 class CoverAsset:
     href: str
     media_type: str
     content: bytes
 
 
-@dataclass(slots=True)
+@dataclass(frozen=True, slots=True)
 class EpubBook:
     source_path: str
     rootfile_path: str
-    metadata: Dict[str, Any]
-    manifest: Dict[str, ManifestItem]
-    manifest_by_href: Dict[str, ManifestItem]
-    spine: List[SpineItem]
-    chapters: List[Chapter]
-    toc: List[TocEntry]
-    warnings: List[str] = field(default_factory=list)
-    cover: Optional[CoverAsset] = None
+    metadata: dict[str, Any]
+    manifest: dict[str, ManifestItem]
+    spine: list[SpineItem]
+    chapters: list[Chapter]
+    toc: list[TocEntry]
+    warnings: list[str] = field(default_factory=list)
+    cover: CoverAsset | None = None
 
-    def to_inspection_dict(self) -> Dict[str, Any]:
+    @property
+    def manifest_by_href(self) -> dict[str, ManifestItem]:
+        return {item.href: item for item in self.manifest.values()}
+
+    def to_inspection_dict(self) -> dict[str, Any]:
         return {
             "source": {
                 "path": self.source_path,

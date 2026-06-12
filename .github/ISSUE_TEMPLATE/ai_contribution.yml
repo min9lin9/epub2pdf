@@ -1,0 +1,47 @@
+name: AI Contribution Proposal
+description: Propose a contribution where AI tools assisted with code, tests, or documentation
+labels: ["risk: ai-generated", "status: needs triage"]
+body:
+  - type: input
+    id: tools
+    attributes:
+      label: AI tools used
+      placeholder: "e.g., GitHub Copilot, OpenAI Codex, Claude Code"
+    validations:
+      required: true
+  - type: textarea
+    id: human_review
+    attributes:
+      label: Human review scope
+      description: Which parts did you personally review, test, and understand?
+    validations:
+      required: true
+  - type: textarea
+    id: changed_files
+    attributes:
+      label: Files or areas AI changed
+    validations:
+      required: true
+  - type: textarea
+    id: tests
+    attributes:
+      label: Tests run
+      description: List the commands and results you verified manually.
+    validations:
+      required: true
+  - type: textarea
+    id: contract_check
+    attributes:
+      label: Contract and behavior check
+      description: How did you verify the change preserves existing contracts (CLI output, sidecar schema, PDF text layer, etc.)?
+  - type: textarea
+    id: explainable
+    attributes:
+      label: What you can explain
+      description: Which design decisions can you explain in review if asked?
+    validations:
+      required: true
+  - type: textarea
+    id: risks
+    attributes:
+      label: Risks or uncertain areas

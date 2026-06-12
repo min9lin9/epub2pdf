@@ -1,0 +1,10 @@
+.github/ @min9lin9
+scripts/ @min9lin9
+src/epub2pdf_cli/render/ @min9lin9
+src/epub2pdf_cli/pdf/ @min9lin9
+src/epub2pdf_cli/pipeline/ @min9lin9
+src/epub2pdf_cli/mcp_server.py @min9lin9
+src/epub2pdf_cli/api.py @min9lin9
+README.md @min9lin9
+pyproject.toml @min9lin9
+Dockerfile @min9lin9

@@ -54,21 +54,27 @@ class Epub2PdfCliTests(unittest.TestCase):
         output_pdf = self.workdir / "output.pdf"
         sidecar_json = self.workdir / "output.json"
         sidecar_html = self.workdir / "output.html"
+        sidecar_markdown = self.workdir / "output.md"
 
         result = self.run_cli(
             "convert",
             str(self.fixture),
+            "--engine",
+            "playwright",
             "--output",
             str(output_pdf),
             "--sidecar-json",
             str(sidecar_json),
             "--sidecar-html",
             str(sidecar_html),
+            "--sidecar-markdown",
+            str(sidecar_markdown),
         )
         self.assertEqual(result.returncode, 0, msg=result.stderr)
         self.assertTrue(output_pdf.exists())
         self.assertTrue(sidecar_json.exists())
         self.assertTrue(sidecar_html.exists())
+        self.assertTrue(sidecar_markdown.exists())
 
         payload = json.loads(sidecar_json.read_text(encoding="utf-8"))
         self.assertEqual(payload["output"]["engine"], "playwright")
@@ -76,6 +82,8 @@ class Epub2PdfCliTests(unittest.TestCase):
         self.assertTrue(payload["output"]["validation"]["has_text"])
         self.assertIn("안녕하세요", payload["output"]["validation"]["text_sample"])
         self.assertIn("chapter-1", sidecar_html.read_text(encoding="utf-8"))
+        self.assertIn("# Sample EPUB", sidecar_markdown.read_text(encoding="utf-8"))
+        self.assertIn("안녕하세요", sidecar_markdown.read_text(encoding="utf-8"))
 
     def test_convert_rejects_malformed_epub(self) -> None:
         output_pdf = self.workdir / "broken.pdf"
@@ -85,7 +93,7 @@ class Epub2PdfCliTests(unittest.TestCase):
 
     def test_convert_preserves_unicode_text(self) -> None:
         output_pdf = self.workdir / "unicode.pdf"
-        result = self.run_cli("convert", str(self.fixture), "--output", str(output_pdf))
+        result = self.run_cli("convert", str(self.fixture), "--engine", "playwright", "--output", str(output_pdf))
         self.assertEqual(result.returncode, 0, msg=result.stderr)
 
         text = extract_text(output_pdf)
@@ -99,10 +107,9 @@ class Epub2PdfCliTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, msg=result.stderr)
         self.assertTrue(output_pdf.exists())
 
-    @unittest.skipUnless(find_spec("opendataloader_pdf") is not None, "opendataloader-pdf is not installed")
     def test_pdf_extract_generates_markdown_and_json(self) -> None:
         output_pdf = self.workdir / "extract-source.pdf"
-        convert_result = self.run_cli("convert", str(self.fixture), "--output", str(output_pdf))
+        convert_result = self.run_cli("convert", str(self.fixture), "--engine", "playwright", "--output", str(output_pdf))
         self.assertEqual(convert_result.returncode, 0, msg=convert_result.stderr)
 
         output_dir = self.workdir / "extract-output"
@@ -132,6 +139,29 @@ class Epub2PdfCliTests(unittest.TestCase):
         )
         self.assertNotEqual(second_result.returncode, 0)
         self.assertIn("[pdf-extract]", second_result.stderr)
+
+    @unittest.skipUnless(find_spec("opendataloader_pdf") is not None, "opendataloader-pdf is not installed")
+    def test_pdf_extract_with_opendataloader_legacy_engine(self) -> None:
+        output_pdf = self.workdir / "extract-source.pdf"
+        convert_result = self.run_cli("convert", str(self.fixture), "--engine", "playwright", "--output", str(output_pdf))
+        self.assertEqual(convert_result.returncode, 0, msg=convert_result.stderr)
+
+        output_dir = self.workdir / "extract-output-legacy"
+        extract_result = self.run_cli(
+            "pdf-extract",
+            str(output_pdf),
+            "--engine",
+            "opendataloader",
+            "--output-dir",
+            str(output_dir),
+            "--format",
+            "markdown,json",
+        )
+        self.assertEqual(extract_result.returncode, 0, msg=extract_result.stderr)
+
+        output_paths = [Path(line.strip()) for line in extract_result.stdout.splitlines() if line.strip()]
+        self.assertTrue(any(path.suffix == ".md" for path in output_paths), msg=extract_result.stdout)
+        self.assertTrue(any(path.suffix == ".json" for path in output_paths), msg=extract_result.stdout)
 
 
 def build_sample_epub(path: Path) -> None:
