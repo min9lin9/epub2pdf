@@ -58,9 +58,13 @@ def run(args: list[str]) -> None:
 
 def main() -> int:
     try:
-        subprocess.run(["gh", "auth", "status"], check=True, capture_output=True)
-    except (subprocess.CalledProcessError, FileNotFoundError):
-        print("Error: GitHub CLI (gh) is not installed or not authenticated.", file=sys.stderr)
+        result = subprocess.run(["gh", "auth", "status"], capture_output=True, text=True)
+    except FileNotFoundError:
+        print("Error: GitHub CLI (gh) is not installed.", file=sys.stderr)
+        return 1
+    output = result.stdout + result.stderr
+    if "Active account: true" not in output:
+        print("Error: GitHub CLI (gh) does not have an active authenticated account.", file=sys.stderr)
         return 1
 
     for name, color, description in LABELS:
