@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from epub2pdf_cli.config import PdfExtractConfig
+from epub2pdf_cli.config import SCHEMA_VERSION, PdfExtractConfig
 from epub2pdf_cli.errors import ExitCode, StageError
 from epub2pdf_cli.io_utils import sha256, write_json
 from epub2pdf_cli.pdf.extract import planned_extract_paths, run_pdf_extraction
@@ -28,6 +28,7 @@ def extract_pdf(config: PdfExtractConfig) -> dict[str, Any]:
         raise StageError("pdf-extract", f"No extraction outputs were created in: {config.output_dir}")
 
     report: dict[str, Any] = {
+        "schema_version": SCHEMA_VERSION,
         "source": {
             "path": str(config.input_path),
             "sha256": sha256(config.input_path),

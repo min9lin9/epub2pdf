@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Literal
 
@@ -21,11 +21,29 @@ TableMethod = Literal["default", "cluster"]
 ReadingOrder = Literal["off", "xycut"]
 PdfExtractorName = Literal["pypdfium2", "docling", "pdfplumber", "opendataloader"]
 
+SCHEMA_VERSION = "1.0"
+
 
 @dataclass(frozen=True, slots=True)
-class ConvertConfig:
-    input_path: Path
-    output_path: Path
+class BaseConfig:
+    """Common settings shared by every pipeline command."""
+
+    force: bool = False
+    verbose: bool = False
+
+
+@dataclass(frozen=True, slots=True)
+class InputConfig(BaseConfig):
+    """Pipeline that reads a single input file."""
+
+    input_path: Path = Path(".")
+
+
+@dataclass(frozen=True, slots=True)
+class ConvertConfig(InputConfig):
+    """Configuration for ``epub2pdf convert``."""
+
+    output_path: Path = Path(".")
     engine: EngineName = "weasyprint"
     sidecar_json_path: Path | None = None
     sidecar_html_path: Path | None = None
@@ -34,8 +52,6 @@ class ConvertConfig:
     margin_mm: int = 12
     cover: CoverMode = "first"
     validate: bool = True
-    force: bool = False
-    verbose: bool = False
 
     def __post_init__(self) -> None:
         if self.margin_mm < 0:
@@ -43,9 +59,11 @@ class ConvertConfig:
 
 
 @dataclass(frozen=True, slots=True)
-class BatchConfig:
-    input_paths: list[Path]
-    output_dir: Path
+class BatchConfig(BaseConfig):
+    """Configuration for ``epub2pdf batch``."""
+
+    input_paths: list[Path] = field(default_factory=list)
+    output_dir: Path = Path(".")
     engine: EngineName = "weasyprint"
     workers: int = 1
     sidecar_json: bool = False
@@ -55,8 +73,6 @@ class BatchConfig:
     margin_mm: int = 12
     cover: CoverMode = "first"
     validate: bool = True
-    force: bool = False
-    verbose: bool = False
 
     def __post_init__(self) -> None:
         if self.margin_mm < 0:
@@ -66,16 +82,18 @@ class BatchConfig:
 
 
 @dataclass(frozen=True, slots=True)
-class InspectConfig:
-    input_path: Path
+class InspectConfig(InputConfig):
+    """Configuration for ``epub2pdf inspect``."""
+
     json_path: Path | None = None
 
 
 @dataclass(frozen=True, slots=True)
-class PdfExtractConfig:
-    input_path: Path
-    output_dir: Path
-    formats: list[PdfExtractFormat]
+class PdfExtractConfig(InputConfig):
+    """Configuration for ``epub2pdf pdf-extract``."""
+
+    output_dir: Path = Path(".")
+    formats: list[PdfExtractFormat] = field(default_factory=list)
     engine: PdfExtractorName = "pypdfium2"
     pages: str | None = None
     password: str | None = None
@@ -92,8 +110,6 @@ class PdfExtractConfig:
     image_dir: Path | None = None
     threads: int | None = None
     sidecar_json_path: Path | None = None
-    force: bool = False
-    verbose: bool = False
 
 
 @dataclass(frozen=True, slots=True)

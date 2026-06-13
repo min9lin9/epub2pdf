@@ -18,11 +18,8 @@ class WeasyPrintEngine:
             ) from exc
 
         try:
-            HTML(string=html).write_pdf(
-                str(options.output_path),
-                size=options.page_size,
-                margin=f"{options.margin_mm}mm",
-                title=options.title or None,
-            )
+            # Page size and margin are enforced by the @page rule injected in
+            # html/template.py; the document title is set in the HTML <head>.
+            HTML(string=html).write_pdf(str(options.output_path))
         except Exception as exc:
             raise StageError("render", "WeasyPrint rendering failed.") from exc

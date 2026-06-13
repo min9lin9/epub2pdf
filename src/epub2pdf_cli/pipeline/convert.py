@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, TypeVar
 
-from epub2pdf_cli.config import ConvertConfig
+from epub2pdf_cli.config import SCHEMA_VERSION, ConvertConfig
 from epub2pdf_cli.epub import read_epub
 from epub2pdf_cli.errors import ExitCode, StageError
 from epub2pdf_cli.html.builder import build_html
@@ -73,6 +73,7 @@ def convert_epub(config: ConvertConfig, engine: Renderer | None = None) -> dict[
         write_text(config.sidecar_html_path, build_result.html)
 
     report: dict[str, Any] = {
+        "schema_version": SCHEMA_VERSION,
         "source": {
             "path": str(config.input_path),
             "sha256": sha256(config.input_path),

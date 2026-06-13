@@ -9,7 +9,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from epub2pdf_cli.config import BatchConfig, ConvertConfig
+from epub2pdf_cli.config import SCHEMA_VERSION, BatchConfig, ConvertConfig
 from epub2pdf_cli.errors import Epub2PdfError
 from epub2pdf_cli.pipeline.convert import convert_epub
 
@@ -41,6 +41,7 @@ def batch_convert(config: BatchConfig) -> dict[str, Any]:
     )
 
     return {
+        "schema_version": SCHEMA_VERSION,
         "engine": config.engine,
         "workers": config.workers,
         "output_dir": str(config.output_dir),
@@ -77,6 +78,7 @@ def _convert_one(convert_config: ConvertConfig) -> dict[str, Any]:
     except Epub2PdfError as exc:
         LOGGER.warning("Conversion failed for %s: %s", convert_config.input_path, exc)
         return {
+            "schema_version": SCHEMA_VERSION,
             "source": {"path": str(convert_config.input_path)},
             "output": {"path": str(convert_config.output_path), "error": str(exc)},
             "error": str(exc),
