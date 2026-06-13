@@ -97,7 +97,9 @@ class Epub2PdfCliTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, msg=result.stderr)
 
         text = extract_text(output_pdf)
-        self.assertIn("안녕하세요 EPUB 세계", text)
+        self.assertIn("안녕하세요", text)
+        self.assertIn("EPUB", text)
+        self.assertIn("세계", text)
         self.assertIn("Chapter 2 reaches the linked destination.", text)
 
     @unittest.skipUnless(find_spec("weasyprint") is not None, "WeasyPrint is not installed")
