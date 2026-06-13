@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from html import escape
-from typing import Any
+from typing import Any, cast
 
 from bs4 import BeautifulSoup
 
@@ -103,7 +103,7 @@ def _build_element_id_map(soups: dict[str, BeautifulSoup]) -> dict[tuple[str, st
     element_id_map: dict[tuple[str, str], str] = {}
     for index, (href, soup) in enumerate(soups.items(), start=1):
         for node in soup.find_all(id=True):
-            original = node.get("id")
+            original = cast(str, node.get("id"))
             if not original:
                 continue
             element_id_map[(href, original)] = f"chapter-{index}-{original}"
@@ -136,10 +136,10 @@ def _render_chapter(
                 tag.decompose()
 
     for node in body.find_all(id=True):
-        original = node.get("id")
+        original = cast(str, node.get("id"))
         if not original:
             continue
-        node["id"] = element_id_map.get((chapter.href, original), node["id"])
+        node["id"] = element_id_map.get((chapter.href, original), original)
 
     rewrite_resources(body, chapter.href, chapter_lookup, chapter_section_ids, element_id_map, book, assets, warnings)
     title = chapter.title or f"Chapter {chapter_index}"
