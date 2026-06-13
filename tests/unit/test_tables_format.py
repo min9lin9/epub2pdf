@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import tempfile
 import unittest
 from pathlib import Path
@@ -7,6 +8,13 @@ from pathlib import Path
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
+
+try:
+    import pdfplumber  # noqa: F401
+
+    _PDFPLUMBER_AVAILABLE = True
+except Exception:  # pragma: no cover
+    _PDFPLUMBER_AVAILABLE = False
 
 from epub2pdf_cli.config import PdfExtractConfig
 from epub2pdf_cli.pipeline.extract import extract_pdf
@@ -40,6 +48,10 @@ class TablesFormatTests(unittest.TestCase):
     def tearDown(self) -> None:
         self.tempdir.cleanup()
 
+    @unittest.skipUnless(
+        _PDFPLUMBER_AVAILABLE,
+        "pdfplumber is not installed; install with `pip install -e '.[pdfplumber]'`",
+    )
     def test_pdfplumber_tables_format(self) -> None:
         output_dir = self.workdir / "out"
         outputs = extract_pdf(
@@ -53,7 +65,5 @@ class TablesFormatTests(unittest.TestCase):
         self.assertTrue(outputs)
         tables_path = output_dir / "table.tables.json"
         self.assertTrue(tables_path.exists())
-        import json
-
         data = json.loads(tables_path.read_text(encoding="utf-8"))
         self.assertTrue(len(data) > 0)
