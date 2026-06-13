@@ -215,6 +215,9 @@ def main(argv: Sequence[str] | None = None) -> int:
             return ExitCode.OK
 
         if args.command == "list-engines":
+            from epub2pdf_cli.pdf.extract import _load_default_extractors
+
+            _load_default_extractors()
             json.dump(
                 {
                     "renderers": sorted(ENGINES.keys()),
