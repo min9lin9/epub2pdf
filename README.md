@@ -76,9 +76,11 @@ python3 -m pip install epub2pdf-cli[mcp]
 Or use the Docker image (no local Python dependencies):
 
 ```bash
-docker run --rm -v "$PWD:/workspace" ghcr.io/min9lin9/epub2pdf \
+docker run --rm -v "$PWD:/workspace" ghcr.io/min9lin9/epub2pdf:0.3.0 \
   convert book.epub --no-validate
 ```
+
+Use `ghcr.io/min9lin9/epub2pdf:main` for the latest development build.
 
 Install Codex/OpenCode skill wrappers globally:
 
