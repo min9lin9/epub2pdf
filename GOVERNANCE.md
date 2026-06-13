@@ -33,13 +33,21 @@ This document describes how the `epub2pdf` project is governed and how decisions
 - **Significant changes**: new engines, new CLI commands, breaking changes, major refactorings. Require an issue and discussion before a PR is opened. The Project Lead makes the final decision.
 - **Disputes**: If reviewers disagree, the Project Lead resolves the dispute. Decisions are documented in the issue or PR thread.
 
+## Review rotation
+
+- CODEOWNERS and area labels determine the default reviewer for a PR.
+- The Project Lead may reassign reviewers to balance load or match expertise.
+- If a PR has no review activity for 7 days, any maintainer may step in.
+- Reviewers should respond to first-time contributors within 3 business days.
+
 ## Maintainer appointment
 
 A contributor may be invited to become a Maintainer after:
 
-- Multiple high-quality contributions.
-- Consistent, constructive code review participation.
+- At least 5 merged, non-trivial PRs or equivalent documentation/architecture work.
+- Consistent, constructive code review participation over at least 2 months.
 - Demonstrated understanding of the project values and contribution guidelines.
+- Willingness to participate in weekly triage and monthly release rhythm.
 
 ## Maintainer removal
 

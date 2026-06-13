@@ -9,22 +9,22 @@ This roadmap is a living document. Priorities may shift based on community feedb
 - [x] CODEOWNERS
 - [x] CI with tests, lint, type check, coverage gate
 - [x] PyPI trusted publishing and Docker image publishing
-- [ ] Public repository visibility
-- [ ] Good first issues published
+- [x] Public repository visibility
+- [x] Good first issues published
 
 ## Phase 1: Core Architecture Stabilization
 
-- [ ] Finalize renderer protocol and engine plugin interface.
-- [ ] Standardize sidecar schema and document backward-compatibility rules.
-- [ ] Improve contract tests for EPUB-to-PDF text fidelity.
-- [ ] Add deterministic regression tests for batch conversion.
-- [ ] Refactor pipeline so `inspect`, `convert`, and `pdf-extract` share the same configuration model.
+- [x] Finalize renderer protocol and engine plugin interface.
+- [x] Standardize sidecar schema and document backward-compatibility rules.
+- [x] Improve contract tests for EPUB-to-PDF text fidelity.
+- [x] Add deterministic regression tests for batch conversion.
+- [x] Refactor pipeline so `inspect`, `convert`, and `pdf-extract` share the same configuration model.
 
 ## Phase 2: Contributor Onboarding
 
 - [x] Document development environment setup for macOS, Linux, and Docker.
 - [x] Add examples: custom renderer plugin, custom extraction backend, batch script.
-- [ ] Add good first issues for documentation, tests, and small features.
+- [x] Add good first issues for documentation, tests, and small features.
 - [ ] Improve error messages and logging for first-time users.
 
 ## Phase 3: Extended Backends and Integrations
@@ -36,8 +36,8 @@ This roadmap is a living document. Priorities may shift based on community feedb
 
 ## Phase 4: Community and Ecosystem
 
-- [ ] Monthly issue triage and release rhythm.
-- [ ] Maintainer rotation and review guidelines.
+- [x] Monthly issue triage and release rhythm.
+- [x] Maintainer rotation and review guidelines.
 - [ ] Discord or GitHub Discussions onboarding flow.
 
 ## What we will NOT do

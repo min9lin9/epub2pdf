@@ -401,6 +401,13 @@ Refresh global skill wrappers after editing integration templates:
 python3 scripts/install_agent_skills.py
 ```
 
+## Community
+
+- [GitHub Discussions](https://github.com/min9lin9/epub2pdf/discussions) for questions and ideas.
+- [docs/community/operation.md](docs/community/operation.md) for triage, release rhythm, and maintainer criteria.
+- [docs/community/releases.md](docs/community/releases.md) for the release checklist.
+- [docs/community/triage.md](docs/community/triage.md) for issue and PR triage.
+
 ## Contributing
 
 We welcome bug reports, feature requests, documentation fixes, and pull requests.
