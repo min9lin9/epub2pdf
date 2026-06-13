@@ -32,7 +32,7 @@ The security policy covers:
 
 - The `epub2pdf` CLI, Python API, MCP server, and agent skill wrappers.
 - Official Docker images published to `ghcr.io/min9lin9/epub2pdf`.
-- PyPI release artifacts for `epub2pdf`.
+- PyPI release artifacts for `epub2pdf-cli`.
 - GitHub Actions workflows in this repository.
 
 Out of scope:

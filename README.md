@@ -1,6 +1,6 @@
 # epub2pdf
 
-[![PyPI](https://img.shields.io/pypi/v/epub2pdf.svg)](https://pypi.org/project/epub2pdf/)
+[![PyPI](https://img.shields.io/pypi/v/epub2pdf-cli.svg)](https://pypi.org/project/epub2pdf-cli/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![CI](https://github.com/min9lin9/epub2pdf/actions/workflows/ci.yml/badge.svg)](https://github.com/min9lin9/epub2pdf/actions/workflows/ci.yml)
 [![Docker](https://github.com/min9lin9/epub2pdf/actions/workflows/docker.yml/badge.svg)](https://github.com/min9lin9/epub2pdf/actions/workflows/docker.yml)
@@ -33,12 +33,12 @@ python3 --version
 
 ## Install
 
-[![PyPI](https://img.shields.io/pypi/v/epub2pdf.svg)](https://pypi.org/project/epub2pdf/)
+[![PyPI](https://img.shields.io/pypi/v/epub2pdf-cli.svg)](https://pypi.org/project/epub2pdf-cli/)
 
 From PyPI (recommended):
 
 ```bash
-python3 -m pip install epub2pdf
+python3 -m pip install epub2pdf-cli
 ```
 
 From source:
@@ -50,7 +50,7 @@ python3 -m pip install -e .
 Install the optional Playwright backend for Chromium-based rendering:
 
 ```bash
-python3 -m pip install epub2pdf[playwright]
+python3 -m pip install epub2pdf-cli[playwright]
 playwright install chromium
 ```
 
@@ -58,19 +58,19 @@ Install enhanced PDF extraction backends:
 
 ```bash
 # Best structured extraction (tables, reading order, OCR)
-python3 -m pip install epub2pdf[docling]
+python3 -m pip install epub2pdf-cli[docling]
 
 # Table specialist
-python3 -m pip install epub2pdf[pdfplumber]
+python3 -m pip install epub2pdf-cli[pdfplumber]
 
 # Legacy Java-based extractor
-python3 -m pip install epub2pdf[legacy-pdf]
+python3 -m pip install epub2pdf-cli[legacy-pdf]
 ```
 
 Install the MCP server for Claude Desktop:
 
 ```bash
-python3 -m pip install epub2pdf[mcp]
+python3 -m pip install epub2pdf-cli[mcp]
 ```
 
 Or use the Docker image (no local Python dependencies):

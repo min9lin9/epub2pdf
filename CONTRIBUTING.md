@@ -139,9 +139,10 @@ AI-assisted contributions are allowed, but the human contributor is responsible 
 6. The `docker.yml` workflow will push the image to GHCR.
 
 Before the first release, enable trusted publishing on PyPI:
-- Go to **Publishing** settings for the `epub2pdf` project.
-- Add a new pending publisher with the repository `min9lin9/epub2pdf` and workflow `release.yml`.
-- Create a `pypi` environment in the repository settings.
+- Go to **Account settings → Publishing** on PyPI.
+- Add a pending publisher for the project `epub2pdf-cli` (or let it be created on first upload).
+- Use repository `min9lin9/epub2pdf` and workflow `release.yml`.
+- Make sure a `pypi` environment exists in the repository settings.
 
 ## Reporting bugs
 

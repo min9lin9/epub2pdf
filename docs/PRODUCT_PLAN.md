@@ -58,7 +58,7 @@
 - Public benchmark dashboard (`scripts/benchmark.py`, `scripts/real_world_benchmark.py`).
 
 ### Pillar C — Developer Experience (DX)
-- One-line install: `pip install epub2pdf`.
+- One-line install: `pip install epub2pdf-cli`.
 - Clear error messages with actionable next steps.
 - Sidecars (JSON/HTML/Markdown) for downstream automation.
 - Stable CLI and Python API.
@@ -131,7 +131,7 @@
 
 | Channel | Goal |
 |---|---|
-| PyPI | Primary install: `pip install epub2pdf` |
+| PyPI | Primary install: `pip install epub2pdf-cli` |
 | Docker | `ghcr.io/min9lin9/epub2pdf` for CI/CD |
 | Homebrew | `brew install epub2pdf` for macOS users |
 | apt | `.deb` via GitHub Releases for Linux users |

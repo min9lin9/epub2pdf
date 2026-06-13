@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/p/epub2pdf
+      url: https://pypi.org/p/epub2pdf-cli
     steps:
       - uses: actions/checkout@v4
 
