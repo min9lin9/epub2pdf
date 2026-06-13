@@ -102,7 +102,7 @@ def build_html(book: EpubBook, config: ConvertConfig) -> BuildResult:
 def _build_element_id_map(soups: dict[str, BeautifulSoup]) -> dict[tuple[str, str], str]:
     element_id_map: dict[tuple[str, str], str] = {}
     for index, (href, soup) in enumerate(soups.items(), start=1):
-        for node in soup.find_all(attrs={"id": True}):
+        for node in soup.find_all(id=True):
             original = node.get("id")
             if not original:
                 continue
@@ -135,7 +135,7 @@ def _render_chapter(
             if tag.name in {"head", "title", "meta", "link", "style", "script"}:
                 tag.decompose()
 
-    for node in body.find_all(attrs={"id": True}):
+    for node in body.find_all(id=True):
         original = node.get("id")
         if not original:
             continue

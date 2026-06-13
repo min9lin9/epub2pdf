@@ -39,7 +39,7 @@ def _parse_nav_document(content: bytes, base_href: str) -> list[TocEntry]:
 
     nav = None
     for candidate in soup.find_all("nav"):
-        epub_type = candidate.get("epub:type") or candidate.get("type") or ""
+        epub_type = str(candidate.get("epub:type") or candidate.get("type") or "")
         if "toc" in epub_type.split():
             nav = candidate
             break
