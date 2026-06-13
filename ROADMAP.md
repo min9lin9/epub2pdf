@@ -27,12 +27,14 @@ This roadmap is a living document. Priorities may shift based on community feedb
 - [x] Add good first issues for documentation, tests, and small features.
 - [ ] Improve error messages and logging for first-time users.
 
-## Phase 3: Extended Backends and Integrations
+## Phase 3: Extended Backends and Integrations (M4) ✅
 
 - [x] Evaluate OCR backend for image-only EPUBs and scanned PDFs.
 - [x] Improve table extraction across `docling`, `pdfplumber`, and `opendataloader`.
 - [x] Add more MCP tools and clarify permission model.
 - [x] Consider a plugin ecosystem for third-party renderers and extractors.
+
+M4 shipped: OCR extractor, `tables` extract format, `validate`/`list-engines` CLI commands, `validate_pdf`/`list_engines` MCP tools, and entry-point plugin loading for renderers and extractors.
 
 ## Phase 4: Community and Ecosystem
 
