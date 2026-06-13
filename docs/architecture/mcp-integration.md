@@ -14,10 +14,14 @@ The server reads MCP requests from stdin and writes responses to stdout.
 
 ## Tools
 
-The current tool set is intentionally narrow:
-
-- `convert_epub_to_pdf(input_path, output_path, ...)`
-- `extract_pdf(input_path, output_dir, ...)`
+| Tool | Purpose |
+|---|---|
+| `convert_epub` | Convert a single EPUB to PDF. |
+| `batch_convert` | Convert multiple EPUBs in parallel. |
+| `inspect_epub` | Return EPUB metadata, manifest, spine, and TOC. |
+| `extract_pdf` | Extract Markdown, JSON, text, HTML, or tables from a PDF. |
+| `validate_pdf` | Validate a PDF file (page count, text layer). |
+| `list_engines` | List available render/extract engines on the host. |
 
 Each tool validates arguments and returns a JSON sidecar report.
 
@@ -26,6 +30,7 @@ Each tool validates arguments and returns a JSON sidecar report.
 - The MCP server runs with the same file-system permissions as the invoking process.
 - It does not accept arbitrary HTML or remote URLs; only local file paths.
 - It does not start a network listener.
+- Each tool spawns the `epub2pdf` CLI in a subprocess and returns when it finishes; no long-lived browser or model process is kept open.
 - `epub2pdf[mcp]` extra dependency is required.
 
 ## Error handling

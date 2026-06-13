@@ -12,6 +12,7 @@ PdfExtractFormat = Literal[
     "json",
     "text",
     "html",
+    "tables",
     "markdown-with-html",
     "markdown-with-images",
     "tagged-pdf",
@@ -19,7 +20,7 @@ PdfExtractFormat = Literal[
 ImageOutputMode = Literal["off", "embedded", "external"]
 TableMethod = Literal["default", "cluster"]
 ReadingOrder = Literal["off", "xycut"]
-PdfExtractorName = Literal["pypdfium2", "docling", "pdfplumber", "opendataloader"]
+PdfExtractorName = Literal["pypdfium2", "docling", "pdfplumber", "opendataloader", "ocr"]
 
 SCHEMA_VERSION = "1.0"
 

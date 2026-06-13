@@ -16,13 +16,17 @@ from epub2pdf_cli.config import (
     PdfExtractFormat,
 )
 from epub2pdf_cli.errors import Epub2PdfError, ExitCode
+from epub2pdf_cli.pdf import validate_pdf
+from epub2pdf_cli.pdf.extract import EXTRACTORS
 from epub2pdf_cli.pipeline import batch_convert, convert_epub, extract_pdf, inspect_epub
+from epub2pdf_cli.render import ENGINES
 
 PDF_EXTRACT_FORMATS: tuple[PdfExtractFormat, ...] = (
     "markdown",
     "json",
     "text",
     "html",
+    "tables",
     "markdown-with-html",
     "markdown-with-images",
     "tagged-pdf",
@@ -71,7 +75,7 @@ def build_parser() -> argparse.ArgumentParser:
     pdf_parser = subparsers.add_parser("pdf-extract", help="Extract Markdown/JSON/HTML from a PDF.")
     pdf_parser.add_argument("input", help="Path to the input .pdf file.")
     pdf_parser.add_argument("-o", "--output-dir", help="Directory for extracted files. Defaults to <pdf-stem>_extracted.")
-    pdf_parser.add_argument("--engine", choices=("pypdfium2", "docling", "pdfplumber", "opendataloader"), default="pypdfium2", help="Extraction backend. Default: pypdfium2.")
+    pdf_parser.add_argument("--engine", choices=("pypdfium2", "docling", "pdfplumber", "opendataloader", "ocr"), default="pypdfium2", help="Extraction backend. Default: pypdfium2.")
     pdf_parser.add_argument(
         "--format",
         default="markdown,json",
@@ -94,6 +98,15 @@ def build_parser() -> argparse.ArgumentParser:
     pdf_parser.add_argument("--sidecar-json", help="Write structured extraction report JSON to this path.")
     pdf_parser.add_argument("--force", action="store_true", help="Overwrite existing extraction outputs.")
     pdf_parser.add_argument("--verbose", action="store_true", help="Enable verbose logs.")
+
+    validate_parser = subparsers.add_parser("validate", help="Validate a PDF file.")
+    validate_parser.add_argument("input", help="Path to the input .pdf file.")
+    validate_parser.add_argument("--no-expect-text", action="store_true", help="Do not require a searchable text layer.")
+    validate_parser.add_argument("--verbose", action="store_true", help="Enable verbose logs.")
+
+    engines_parser = subparsers.add_parser("list-engines", help="List available render and extract engines.")
+    engines_parser.add_argument("--verbose", action="store_true", help="Enable verbose logs.")
+
     return parser
 
 
@@ -193,6 +206,25 @@ def main(argv: Sequence[str] | None = None) -> int:
             )
             for output in report["outputs"]:
                 print(output)
+            return ExitCode.OK
+
+        if args.command == "validate":
+            report = validate_pdf(Path(args.input), expect_text=not args.no_expect_text)
+            json.dump(report, sys.stdout, ensure_ascii=False, indent=2)
+            sys.stdout.write("\n")
+            return ExitCode.OK
+
+        if args.command == "list-engines":
+            json.dump(
+                {
+                    "renderers": sorted(ENGINES.keys()),
+                    "extractors": sorted(EXTRACTORS.keys()),
+                },
+                sys.stdout,
+                ensure_ascii=False,
+                indent=2,
+            )
+            sys.stdout.write("\n")
             return ExitCode.OK
     except Epub2PdfError as exc:
         print(str(exc), file=sys.stderr)

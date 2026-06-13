@@ -12,6 +12,7 @@ EXTRACTORS: dict[str, type[Extractor]] = {}
 
 def _load_default_extractors() -> None:
     from epub2pdf_cli.pdf.extractors.docling_extractor import DoclingExtractor
+    from epub2pdf_cli.pdf.extractors.ocr_extractor import OcrExtractor
     from epub2pdf_cli.pdf.extractors.opendataloader_extractor import OpendataloaderExtractor
     from epub2pdf_cli.pdf.extractors.pdfplumber_extractor import PdfPlumberExtractor
     from epub2pdf_cli.pdf.extractors.pypdfium2_extractor import Pypdfium2Extractor
@@ -20,6 +21,25 @@ def _load_default_extractors() -> None:
     EXTRACTORS.setdefault("docling", DoclingExtractor)
     EXTRACTORS.setdefault("pdfplumber", PdfPlumberExtractor)
     EXTRACTORS.setdefault("opendataloader", OpendataloaderExtractor)
+    EXTRACTORS.setdefault("ocr", OcrExtractor)
+    _load_entry_point_extractors()
+
+
+def _load_entry_point_extractors() -> None:
+    try:
+        from importlib.metadata import entry_points
+    except ImportError:  # pragma: no cover
+        return
+    try:
+        eps = entry_points(group="epub2pdf.extractors")
+    except TypeError:  # pragma: no cover
+        return
+    for ep in eps:
+        try:
+            cls = ep.load()
+            EXTRACTORS.setdefault(cls.name, cls)
+        except Exception:
+            continue
 
 
 def run_pdf_extraction(config: PdfExtractConfig, timings: dict[str, float] | None = None) -> list[str]:
@@ -78,6 +98,7 @@ def planned_extract_paths(input_path: Path, output_dir: Path, formats: Sequence[
         "markdown-with-html": ".md",
         "markdown-with-images": ".md",
         "tagged-pdf": ".pdf",
+        "tables": ".tables.json",
     }
     planned: list[Path] = []
     for fmt in formats:

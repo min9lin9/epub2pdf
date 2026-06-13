@@ -161,7 +161,7 @@ def extract_pdf(
     sidecar_json: bool = False,
     force: bool = False,
 ) -> dict[str, Any]:
-    """Extract Markdown, JSON, text, or HTML from an existing PDF."""
+    """Extract Markdown, JSON, text, HTML, or tables from an existing PDF."""
     args: list[str] = [
         "pdf-extract",
         input_path,
@@ -179,6 +179,21 @@ def extract_pdf(
     if force:
         args.append("--force")
     return _run_cli(*args)
+
+
+@mcp.tool()
+def validate_pdf(input_path: str, *, expect_text: bool = True) -> dict[str, Any]:
+    """Validate a PDF file and return page count / text-layer check."""
+    args = ["validate", input_path]
+    if not expect_text:
+        args.append("--no-expect-text")
+    return _run_cli(*args)
+
+
+@mcp.tool()
+def list_engines() -> dict[str, Any]:
+    """List available render and extract engines installed on this machine."""
+    return _run_cli("list-engines")
 
 
 def main() -> None:

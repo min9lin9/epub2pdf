@@ -71,6 +71,12 @@ class PdfPlumberExtractor(Extractor):
                 _timed_stage_void("write_json", lambda: path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8"), timings)
                 outputs.append(str(path))
 
+            if "tables" in formats:
+                tables, _ = _timed_stage("extract_tables", lambda: self._extract_tables(pdf, page_numbers), timings)
+                path = output_dir / f"{base_name}.tables.json"
+                _timed_stage_void("write_tables", lambda: path.write_text(json.dumps(tables, ensure_ascii=False, indent=2), encoding="utf-8"), timings)
+                outputs.append(str(path))
+
             return outputs
 
     def _extract_text(self, pdf: Any, page_numbers: list[int]) -> str:
@@ -84,6 +90,18 @@ class PdfPlumberExtractor(Extractor):
             except Exception:
                 continue
         return "\n\n".join(parts)
+
+    def _extract_tables(self, pdf: Any, page_numbers: list[int]) -> list[dict[str, Any]]:
+        tables: list[dict[str, Any]] = []
+        for num in page_numbers:
+            try:
+                page = pdf.pages[num - 1]
+                page_tables = page.extract_tables() or []
+                if page_tables:
+                    tables.append({"page": num, "tables": page_tables})
+            except Exception:
+                continue
+        return tables
 
     def _text_to_markdown(self, text: str) -> str:
         lines = []

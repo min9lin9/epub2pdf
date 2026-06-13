@@ -29,10 +29,10 @@ This roadmap is a living document. Priorities may shift based on community feedb
 
 ## Phase 3: Extended Backends and Integrations
 
-- [ ] Evaluate OCR backend for image-only EPUBs and scanned PDFs.
-- [ ] Improve table extraction across `docling`, `pdfplumber`, and `opendataloader`.
-- [ ] Add more MCP tools and clarify permission model.
-- [ ] Consider a plugin ecosystem for third-party renderers and extractors.
+- [x] Evaluate OCR backend for image-only EPUBs and scanned PDFs.
+- [x] Improve table extraction across `docling`, `pdfplumber`, and `opendataloader`.
+- [x] Add more MCP tools and clarify permission model.
+- [x] Consider a plugin ecosystem for third-party renderers and extractors.
 
 ## Phase 4: Community and Ecosystem
 

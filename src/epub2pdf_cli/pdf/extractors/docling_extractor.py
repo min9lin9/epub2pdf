@@ -77,7 +77,24 @@ class DoclingExtractor(Extractor):
             _timed_stage_void("write_json", lambda: path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8"), timings)
             outputs.append(str(path))
 
+        if "tables" in formats:
+            data, _ = _timed_stage("export_to_dict", lambda: result.document.export_to_dict(), timings)
+            tables = self._extract_tables_from_dict(data)
+            path = output_dir / f"{base_name}.tables.json"
+            _timed_stage_void("write_tables", lambda: path.write_text(json.dumps(tables, ensure_ascii=False, indent=2), encoding="utf-8"), timings)
+            outputs.append(str(path))
+
         return outputs
+
+    def _extract_tables_from_dict(self, data: dict[str, Any]) -> list[dict[str, Any]]:
+        tables: list[dict[str, Any]] = []
+        for item in data.get("texts", []) if isinstance(data.get("texts"), list) else []:
+            if item.get("label") == "table":
+                tables.append(item)
+        for item in data.get("body", {}).get("children", []) if isinstance(data.get("body"), dict) else []:
+            if item.get("label") == "table":
+                tables.append(item)
+        return tables
 
     def _markdown_to_text(self, markdown: str) -> str:
         # Minimal conversion: strip heading markers and list markers
