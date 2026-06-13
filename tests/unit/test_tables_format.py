@@ -12,6 +12,14 @@ from epub2pdf_cli.config import PdfExtractConfig
 from epub2pdf_cli.pipeline.extract import extract_pdf
 
 
+try:
+    import pdfplumber  # noqa: F401
+
+    _PDFPLUMBER_AVAILABLE = True
+except Exception:  # pragma: no cover
+    _PDFPLUMBER_AVAILABLE = False
+
+
 def _build_table_pdf(path: Path) -> None:
     doc = SimpleDocTemplate(str(path), pagesize=letter)
     data = [["Header 1", "Header 2"], ["Row 1 Col 1", "Row 1 Col 2"]]
@@ -40,6 +48,10 @@ class TablesFormatTests(unittest.TestCase):
     def tearDown(self) -> None:
         self.tempdir.cleanup()
 
+    @unittest.skipUnless(
+        _PDFPLUMBER_AVAILABLE,
+        "pdfplumber is not installed; install with `pip install -e '.[pdfplumber]'`",
+    )
     def test_pdfplumber_tables_format(self) -> None:
         output_dir = self.workdir / "out"
         outputs = extract_pdf(
