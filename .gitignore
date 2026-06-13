@@ -10,4 +10,5 @@ dist/
 build/
 *.pdf
 *_extracted/
-.coverage
+.coverage*
+coverage.xml
