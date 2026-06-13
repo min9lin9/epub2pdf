@@ -22,8 +22,8 @@ This roadmap is a living document. Priorities may shift based on community feedb
 
 ## Phase 2: Contributor Onboarding
 
-- [ ] Document development environment setup for macOS, Linux, and Docker.
-- [ ] Add examples: custom renderer plugin, custom extraction backend, batch script.
+- [x] Document development environment setup for macOS, Linux, and Docker.
+- [x] Add examples: custom renderer plugin, custom extraction backend, batch script.
 - [ ] Add good first issues for documentation, tests, and small features.
 - [ ] Improve error messages and logging for first-time users.
 

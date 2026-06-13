@@ -7,6 +7,20 @@ from epub2pdf_cli.config import PdfExtractConfig
 from epub2pdf_cli.errors import ExitCode, StageError
 from epub2pdf_cli.pdf.extractors.base import Extractor
 
+EXTRACTORS: dict[str, type[Extractor]] = {}
+
+
+def _load_default_extractors() -> None:
+    from epub2pdf_cli.pdf.extractors.docling_extractor import DoclingExtractor
+    from epub2pdf_cli.pdf.extractors.opendataloader_extractor import OpendataloaderExtractor
+    from epub2pdf_cli.pdf.extractors.pdfplumber_extractor import PdfPlumberExtractor
+    from epub2pdf_cli.pdf.extractors.pypdfium2_extractor import Pypdfium2Extractor
+
+    EXTRACTORS.setdefault("pypdfium2", Pypdfium2Extractor)
+    EXTRACTORS.setdefault("docling", DoclingExtractor)
+    EXTRACTORS.setdefault("pdfplumber", PdfPlumberExtractor)
+    EXTRACTORS.setdefault("opendataloader", OpendataloaderExtractor)
+
 
 def run_pdf_extraction(config: PdfExtractConfig, timings: dict[str, float] | None = None) -> list[str]:
     extractor = _select_extractor(config.engine)
@@ -36,20 +50,14 @@ def run_pdf_extraction(config: PdfExtractConfig, timings: dict[str, float] | Non
 
 
 def _select_extractor(name: str) -> Extractor:
-    from epub2pdf_cli.pdf.extractors.docling_extractor import DoclingExtractor
-    from epub2pdf_cli.pdf.extractors.opendataloader_extractor import OpendataloaderExtractor
-    from epub2pdf_cli.pdf.extractors.pdfplumber_extractor import PdfPlumberExtractor
-    from epub2pdf_cli.pdf.extractors.pypdfium2_extractor import Pypdfium2Extractor
-
-    registry: dict[str, type[Extractor]] = {
-        "pypdfium2": Pypdfium2Extractor,
-        "docling": DoclingExtractor,
-        "pdfplumber": PdfPlumberExtractor,
-        "opendataloader": OpendataloaderExtractor,
-    }
-    cls = registry.get(name)
+    _load_default_extractors()
+    cls = EXTRACTORS.get(name)
     if cls is None:
-        raise StageError("pdf-extract", f"Unsupported extractor: {name}. Choose from {', '.join(registry)}.", exit_code=ExitCode.USAGE)
+        raise StageError(
+            "pdf-extract",
+            f"Unsupported extractor: {name}. Choose from {', '.join(EXTRACTORS)}.",
+            exit_code=ExitCode.USAGE,
+        )
     return cls()
 
 

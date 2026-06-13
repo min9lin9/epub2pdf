@@ -360,10 +360,23 @@ The skill should call `epub2pdf inspect`, `epub2pdf convert`, or `epub2pdf pdf-e
 
 ## Development
 
-Run tests:
+For detailed setup instructions, see [docs/development/setup.md](docs/development/setup.md).
+
+Quick start:
 
 ```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python3 -m pip install -e '.[all,dev]'
 PYTHONPATH=src python3 -m pytest -q
+```
+
+Before committing, run all checks:
+
+```bash
+python3 -m ruff check src tests
+python3 -m mypy src
+PYTHONPATH=src python3 -m pytest -q --cov=epub2pdf_cli --cov-fail-under=60
 ```
 
 The source is organized into layered packages:
@@ -376,11 +389,11 @@ The source is organized into layered packages:
 - `epub2pdf_cli/pdf/` — PDF validation and extraction adapters.
 - `epub2pdf_cli/pipeline/` — high-level `inspect`, `convert`, and `extract` workflows.
 
-Validate the Codex skill template:
+Examples are under [examples/](examples/):
 
-```bash
-python3 /Users/burt/.codex/skills/.system/skill-creator/scripts/quick_validate.py integrations/codex/epub2pdf
-```
+- `batch_convert.sh` — convert all EPUBs in a directory.
+- `custom_renderer_plugin.py` — skeleton `Renderer` implementation.
+- `custom_extractor_plugin.py` — skeleton `Extractor` implementation.
 
 Refresh global skill wrappers after editing integration templates:
 
