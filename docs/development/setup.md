@@ -2,7 +2,7 @@
 
 # Development Setup
 
-This guide covers how to build and test `epub2pdf` locally on macOS, Linux, and Docker.
+This guide covers how to build and test `epub2pdf` locally on macOS, Linux, Windows (WSL recommended), and Docker.
 
 ## Common prerequisites
 
@@ -78,6 +78,37 @@ This guide covers how to build and test `epub2pdf` locally on macOS, Linux, and 
    PYTHONPATH=src python3 -m pytest -q
    ```
 
+## Windows
+
+Windows development is easiest under **WSL2 (Ubuntu)**. The native Windows path is supported only via Docker because WeasyPrint's system libraries (Pango, Cairo, GDK-PixBuf) are difficult to install reliably on Windows directly.
+
+### WSL2 (recommended)
+
+1. Install WSL2 with Ubuntu:
+
+   ```powershell
+   wsl --install -d Ubuntu
+   ```
+
+2. Open the Ubuntu shell and follow the **Linux (Ubuntu/Debian)** section above.
+
+### Native Windows (Docker only)
+
+1. Install [Docker Desktop for Windows](https://www.docker.com/products/docker-desktop/) with WSL2 backend enabled.
+2. Clone the repository in PowerShell:
+
+   ```powershell
+   git clone https://github.com/min9lin9/epub2pdf.git
+   cd epub2pdf
+   ```
+
+3. Build and run through Docker:
+
+   ```powershell
+   docker build -t epub2pdf .
+   docker run --rm -v "${PWD}:/workspace" epub2pdf convert book.epub --no-validate
+   ```
+
 ## Docker
 
 If you do not want to install Python dependencies locally:
@@ -102,6 +133,17 @@ python3 -m ruff check src tests
 python3 -m mypy src
 PYTHONPATH=src python3 -m pytest -q --cov=epub2pdf_cli --cov-fail-under=60
 ```
+
+### Pre-commit hooks (optional)
+
+Install [pre-commit](https://pre-commit.com/) and the project hooks to catch lint and type issues automatically:
+
+```bash
+python3 -m pip install pre-commit
+pre-commit install
+pre-commit run --all-files
+```
+
 
 ## Optional backends
 
