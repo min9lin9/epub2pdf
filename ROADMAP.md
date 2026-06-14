@@ -36,11 +36,12 @@ This roadmap is a living document. Priorities may shift based on community feedb
 
 M4 shipped: OCR extractor, `tables` extract format, `validate`/`list-engines` CLI commands, `validate_pdf`/`list_engines` MCP tools, and entry-point plugin loading for renderers and extractors.
 
-## Phase 4: Community and Ecosystem
+## Phase 4: Community and Ecosystem ✅
 
 - [x] Monthly issue triage and release rhythm.
 - [x] Maintainer rotation and review guidelines.
-- [ ] Discord or GitHub Discussions onboarding flow.
+- [x] GitHub Discussions onboarding flow (welcome thread + category guide).
+- [ ] Discord server (deferred until critical mass of contributors exists).
 
 ## What we will NOT do
 

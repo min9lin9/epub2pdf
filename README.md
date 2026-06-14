@@ -404,6 +404,7 @@ python3 scripts/install_agent_skills.py
 ## Community
 
 - [GitHub Discussions](https://github.com/min9lin9/epub2pdf/discussions) for questions and ideas.
+- [docs/community/discussions.md](docs/community/discussions.md) for the onboarding flow and category guide.
 - [docs/community/operation.md](docs/community/operation.md) for triage, release rhythm, and maintainer criteria.
 - [docs/community/releases.md](docs/community/releases.md) for the release checklist.
 - [docs/community/triage.md](docs/community/triage.md) for issue and PR triage.
