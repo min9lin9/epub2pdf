@@ -50,6 +50,20 @@ class Epub2PdfCliTests(unittest.TestCase):
         self.assertEqual(payload["spine"][0]["href"], "OEBPS/chapter1.xhtml")
         self.assertEqual(payload["toc"][0]["title"], "Start Here")
 
+    def test_convert_help_mentions_optional_extras(self) -> None:
+        result = self.run_cli("convert", "--help")
+        self.assertEqual(result.returncode, 0, msg=result.stderr)
+        self.assertIn("optional", result.stdout)
+        self.assertIn("extras", result.stdout)
+        self.assertIn("troubleshooting.md", result.stdout)
+
+    def test_pdf_extract_help_mentions_optional_extras(self) -> None:
+        result = self.run_cli("pdf-extract", "--help")
+        self.assertEqual(result.returncode, 0, msg=result.stderr)
+        self.assertIn("optional", result.stdout)
+        self.assertIn("extras", result.stdout)
+        self.assertIn("troubleshooting.md", result.stdout)
+
     def test_convert_generates_pdf_and_sidecars(self) -> None:
         output_pdf = self.workdir / "output.pdf"
         sidecar_json = self.workdir / "output.json"

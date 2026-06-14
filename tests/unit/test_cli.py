@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import unittest
+from io import StringIO
 from pathlib import Path
 from unittest.mock import patch
 
 from epub2pdf_cli.cli import main
+from epub2pdf_cli.errors import StageError
 
 
 class CliTests(unittest.TestCase):
@@ -73,3 +75,19 @@ class CliTests(unittest.TestCase):
         config = mock_batch.call_args[0][0]
         self.assertEqual(config.workers, 2)
         self.assertEqual(config.output_dir, Path("/out"))
+
+    @patch("epub2pdf_cli.cli.convert_epub")
+    def test_friendly_error_includes_hint(self, mock_convert) -> None:
+        mock_convert.side_effect = StageError(
+            "convert",
+            "WeasyPrint is not installed.",
+            hint="Install it with: python3 -m pip install -e '.[weasyprint]'",
+        )
+        stderr = StringIO()
+        with patch("sys.stderr", stderr):
+            code = main(["convert", "/in/book.epub"])
+        self.assertNotEqual(code, 0)
+        output = stderr.getvalue()
+        self.assertIn("Error: [convert] WeasyPrint is not installed.", output)
+        self.assertIn("Install it with: python3 -m pip install -e '.[weasyprint]'", output)
+        self.assertIn("docs/troubleshooting.md", output)

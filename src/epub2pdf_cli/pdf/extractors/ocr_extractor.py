@@ -45,10 +45,15 @@ class OcrExtractor(Extractor):
             import pytesseract
             from pdf2image import convert_from_path
         except Exception as exc:
-            raise StageError(
+            raise StageError.missing_dependency(
                 "pdf-extract",
-                "OCR dependencies are not installed. Install with `python3 -m pip install -e '.[ocr]'`.",
-                exit_code=ExitCode.USAGE,
+                "OCR dependencies (pytesseract, pdf2image, Pillow)",
+                "ocr",
+                system_hint=(
+                    "OCR also needs the tesseract binary.\n"
+                    "On Ubuntu/Debian: sudo apt-get install -y tesseract-ocr poppler-utils\n"
+                    "On macOS with Homebrew: brew install tesseract"
+                ),
             ) from exc
 
         output_dir.mkdir(parents=True, exist_ok=True)
@@ -85,6 +90,10 @@ class OcrExtractor(Extractor):
                     "pdf-extract",
                     "Tesseract OCR failed. Is the tesseract binary installed?",
                     exit_code=ExitCode.USAGE,
+                    hint=(
+                        "Install tesseract: sudo apt-get install -y tesseract-ocr (Ubuntu/Debian) "
+                        "or brew install tesseract (macOS)."
+                    ),
                 ) from exc
             finally:
                 if timings is not None:
