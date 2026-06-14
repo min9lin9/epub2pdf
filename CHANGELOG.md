@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-06-13
+
 ### Added
 - Parallel `batch` CLI command with `--workers` support.
 - `Epub2Pdf` Python API with browser pooling and `batch_convert(max_workers=...)`.
@@ -34,3 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Replaced default Chromium/Java backends with WeasyPrint/pypdfium2.
+
+[Unreleased]: https://github.com/min9lin9/epub2pdf/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/min9lin9/epub2pdf/compare/v0.2.0...v0.3.0
+[0.2.0]: https://github.com/min9lin9/epub2pdf/releases/tag/v0.2.0
