@@ -5,7 +5,7 @@ from collections.abc import Callable, Sequence
 from pathlib import Path
 from typing import Any, TypeVar
 
-from epub2pdf_cli.errors import ExitCode, StageError
+from epub2pdf_cli.errors import StageError
 from epub2pdf_cli.pdf.extractors.base import Extractor
 
 T = TypeVar("T")
@@ -28,10 +28,10 @@ class OpendataloaderExtractor(Extractor):
         try:
             import opendataloader_pdf
         except Exception as exc:
-            raise StageError(
+            raise StageError.missing_dependency(
                 "pdf-extract",
-                "opendataloader-pdf is not installed. Install with `python3 -m pip install -e '.[legacy-pdf]'`.",
-                exit_code=ExitCode.USAGE,
+                "opendataloader-pdf",
+                "legacy-pdf",
             ) from exc
 
         output_dir.mkdir(parents=True, exist_ok=True)

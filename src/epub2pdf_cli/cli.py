@@ -32,6 +32,16 @@ PDF_EXTRACT_FORMATS: tuple[PdfExtractFormat, ...] = (
     "tagged-pdf",
 )
 
+_CONVERT_ENGINE_HELP = (
+    "Rendering backend. Each choice may require optional extras "
+    "(see docs/troubleshooting.md). Choices: %(choices)s. Default: %(default)s."
+)
+
+_EXTRACT_ENGINE_HELP = (
+    "Extraction backend. Each choice may require optional extras "
+    "(see docs/troubleshooting.md). Choices: %(choices)s. Default: %(default)s."
+)
+
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="epub2pdf", description="Convert EPUB files into machine-readable PDFs.")
@@ -41,7 +51,7 @@ def build_parser() -> argparse.ArgumentParser:
     convert_parser = subparsers.add_parser("convert", help="Render an EPUB into PDF.")
     convert_parser.add_argument("input", help="Path to the input .epub file.")
     convert_parser.add_argument("-o", "--output", help="Path to the output PDF. Defaults to the input basename with .pdf.")
-    convert_parser.add_argument("--engine", choices=("playwright", "weasyprint"), default="weasyprint", help="Rendering backend. Default: weasyprint.")
+    convert_parser.add_argument("--engine", choices=("playwright", "weasyprint"), default="weasyprint", help=_CONVERT_ENGINE_HELP)
     convert_parser.add_argument("--sidecar-json", help="Write structured conversion output JSON to this path.")
     convert_parser.add_argument("--sidecar-html", help="Write the normalized merged HTML to this path.")
     convert_parser.add_argument("--sidecar-markdown", help="Write a Markdown version of the EPUB to this path.")
@@ -55,7 +65,7 @@ def build_parser() -> argparse.ArgumentParser:
     batch_parser = subparsers.add_parser("batch", help="Convert multiple EPUBs in parallel.")
     batch_parser.add_argument("inputs", nargs="+", help="Paths to input .epub files.")
     batch_parser.add_argument("-o", "--output-dir", required=True, help="Directory for output PDFs.")
-    batch_parser.add_argument("--engine", choices=("playwright", "weasyprint"), default="weasyprint", help="Rendering backend. Default: weasyprint.")
+    batch_parser.add_argument("--engine", choices=("playwright", "weasyprint"), default="weasyprint", help=_CONVERT_ENGINE_HELP)
     batch_parser.add_argument("-j", "--workers", type=int, default=1, help="Number of parallel worker processes. Default: 1.")
     batch_parser.add_argument("--sidecar-json", action="store_true", help="Write a JSON report next to each PDF.")
     batch_parser.add_argument("--sidecar-html", action="store_true", help="Write merged HTML next to each PDF.")
@@ -75,7 +85,7 @@ def build_parser() -> argparse.ArgumentParser:
     pdf_parser = subparsers.add_parser("pdf-extract", help="Extract Markdown/JSON/HTML from a PDF.")
     pdf_parser.add_argument("input", help="Path to the input .pdf file.")
     pdf_parser.add_argument("-o", "--output-dir", help="Directory for extracted files. Defaults to <pdf-stem>_extracted.")
-    pdf_parser.add_argument("--engine", choices=("pypdfium2", "docling", "pdfplumber", "opendataloader", "ocr"), default="pypdfium2", help="Extraction backend. Default: pypdfium2.")
+    pdf_parser.add_argument("--engine", choices=("pypdfium2", "docling", "pdfplumber", "opendataloader", "ocr"), default="pypdfium2", help=_EXTRACT_ENGINE_HELP)
     pdf_parser.add_argument(
         "--format",
         default="markdown,json",
@@ -230,11 +240,13 @@ def main(argv: Sequence[str] | None = None) -> int:
             sys.stdout.write("\n")
             return ExitCode.OK
     except Epub2PdfError as exc:
-        print(str(exc), file=sys.stderr)
+        _print_user_facing_error(exc)
         return exc.exit_code
     except Exception as exc:
         logging.getLogger(__name__).exception("Unexpected error")
-        print(f"Unexpected error: {exc}", file=sys.stderr)
+        _print_user_facing_error(
+            Epub2PdfError(f"Unexpected error: {exc}", hint="Run with --verbose to see the full traceback.")
+        )
         return ExitCode.UNEXPECTED
 
     # Unreachable because subparsers are required, but kept for safety.
@@ -245,6 +257,13 @@ def main(argv: Sequence[str] | None = None) -> int:
 def _configure_logging(verbose: bool) -> None:
     level = logging.DEBUG if verbose else logging.WARNING
     logging.basicConfig(level=level, format="%(levelname)s %(message)s")
+
+
+def _print_user_facing_error(exc: Epub2PdfError) -> None:
+    print(f"Error: {exc}", file=sys.stderr)
+    if exc.hint:
+        print(f"\n{exc.hint}", file=sys.stderr)
+    print("\nNeed help? Run with --verbose for details, or see docs/troubleshooting.md.", file=sys.stderr)
 
 
 def _parse_pdf_formats(raw: str) -> list[PdfExtractFormat]:

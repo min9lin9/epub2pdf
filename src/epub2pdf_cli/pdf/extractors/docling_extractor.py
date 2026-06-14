@@ -6,7 +6,7 @@ from collections.abc import Callable, Sequence
 from pathlib import Path
 from typing import Any, TypeVar
 
-from epub2pdf_cli.errors import ExitCode, StageError
+from epub2pdf_cli.errors import StageError
 from epub2pdf_cli.pdf.extractors.base import Extractor
 
 T = TypeVar("T")
@@ -30,10 +30,10 @@ class DoclingExtractor(Extractor):
             from docling.datamodel.base_models import ConversionStatus
             from docling.document_converter import DocumentConverter
         except Exception as exc:
-            raise StageError(
+            raise StageError.missing_dependency(
                 "pdf-extract",
-                "Docling is not installed. Install with `python3 -m pip install -e '.[docling]'`.",
-                exit_code=ExitCode.USAGE,
+                "Docling",
+                "docling",
             ) from exc
 
         output_dir.mkdir(parents=True, exist_ok=True)

@@ -20,12 +20,12 @@ This roadmap is a living document. Priorities may shift based on community feedb
 - [x] Add deterministic regression tests for batch conversion.
 - [x] Refactor pipeline so `inspect`, `convert`, and `pdf-extract` share the same configuration model.
 
-## Phase 2: Contributor Onboarding
+## Phase 2: Contributor Onboarding ✅
 
 - [x] Document development environment setup for macOS, Linux, and Docker.
 - [x] Add examples: custom renderer plugin, custom extraction backend, batch script.
 - [x] Add good first issues for documentation, tests, and small features.
-- [ ] Improve error messages and logging for first-time users.
+- [x] Improve error messages and logging for first-time users.
 
 ## Phase 3: Extended Backends and Integrations (M4) ✅
 

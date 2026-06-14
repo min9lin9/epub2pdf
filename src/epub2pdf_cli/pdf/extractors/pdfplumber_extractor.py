@@ -6,7 +6,7 @@ from collections.abc import Callable, Sequence
 from pathlib import Path
 from typing import Any, TypeVar
 
-from epub2pdf_cli.errors import ExitCode, StageError
+from epub2pdf_cli.errors import StageError
 from epub2pdf_cli.pdf.extractors.base import Extractor
 
 T = TypeVar("T")
@@ -29,10 +29,10 @@ class PdfPlumberExtractor(Extractor):
         try:
             import pdfplumber
         except Exception as exc:
-            raise StageError(
+            raise StageError.missing_dependency(
                 "pdf-extract",
-                "pdfplumber is not installed. Install with `python3 -m pip install -e '.[pdfplumber]'`.",
-                exit_code=ExitCode.USAGE,
+                "pdfplumber",
+                "pdfplumber",
             ) from exc
 
         output_dir.mkdir(parents=True, exist_ok=True)

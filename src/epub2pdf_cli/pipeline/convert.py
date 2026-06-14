@@ -52,11 +52,10 @@ def convert_epub(config: ConvertConfig, engine: Renderer | None = None) -> dict[
         try:
             engine = ENGINES[config.engine]()
         except KeyError as exc:
-            raise StageError(
+            raise StageError.missing_dependency(
                 "convert",
-                f"Rendering engine '{config.engine}' is not installed. "
-                f"Install with `python3 -m pip install -e '.[{config.engine}]'`.",
-                exit_code=ExitCode.USAGE,
+                f"Rendering engine '{config.engine}'",
+                config.engine,
             ) from exc
     _, timings["render"] = _timed_stage("render", lambda: engine.render(build_result.html, render_options))
 
