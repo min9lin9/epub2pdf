@@ -50,7 +50,10 @@ class StageError(Epub2PdfError):
         system_hint: str | None = None,
     ) -> StageError:
         """Build a friendly error for a missing optional dependency."""
-        hint_lines = [f"Install it with: python3 -m pip install -e '.[{extra}]'"]
+        hint_lines = [
+            f"Install it with: python3 -m pip install 'epub2pdf-cli[{extra}]'",
+            f"Or install from source: python3 -m pip install -e '.[{extra}]'",
+        ]
         if system_hint:
             hint_lines.append(system_hint)
         hint_lines.append("See docs/troubleshooting.md for platform-specific notes.")
