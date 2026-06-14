@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.1] - 2026-06-14
+
+### Fixed
+- Include `weasyprint` in the default package dependencies so that `pip install epub2pdf-cli` works out of the box.
+- Update missing-dependency hints to reference the PyPI package name (`epub2pdf-cli[{extra}]`).
+
 ## [0.3.0] - 2026-06-13
 
 ### Added
@@ -37,6 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Replaced default Chromium/Java backends with WeasyPrint/pypdfium2.
 
-[Unreleased]: https://github.com/min9lin9/epub2pdf/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/min9lin9/epub2pdf/compare/v0.3.1...HEAD
+[0.3.1]: https://github.com/min9lin9/epub2pdf/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/min9lin9/epub2pdf/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/min9lin9/epub2pdf/releases/tag/v0.2.0
