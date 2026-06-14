@@ -12,6 +12,8 @@ This document defines the day-to-day operation of the `epub2pdf` project. It is 
 | GitHub Discussions | Questions, ideas, announcements, usage help | https://github.com/min9lin9/epub2pdf/discussions |
 | Discord (future) | Real-time chat, office hours, casual questions | To be created when critical mass exists |
 
+See [docs/community/discussions.md](discussions.md) for the onboarding flow and category guide.
+
 Until there is a critical mass of contributors, **GitHub Discussions** is the primary real-time-ish channel.
 
 ## Issue triage
