@@ -14,11 +14,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `epub2pdf_cli.jsonl` module that writes one AI-friendly JSON object per EPUB chapter.
 - JSONL sidecar support in the MCP server tools (`convert_epub`, `batch_convert`).
 
-## [0.3.2] - 2026-06-14
+## [0.3.4] - 2026-06-15
 
 ### Fixed
-- Read `__version__` from package metadata to keep CLI `--version` in sync with releases.
-- Remove unsupported `print-color-adjust` CSS properties from the default stylesheet to eliminate WeasyPrint warnings.
+- Handle EPUB package documents that use the `opf:` prefix without declaring `xmlns:opf`. This makes conversion work for more real-world EPUBs, including Korean-language titles from Anna’s Archive.
+
+## [0.3.2] - 2026-06-14
 
 ### Fixed
 - Read `__version__` from package metadata to keep CLI `--version` in sync with releases.
@@ -60,7 +61,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Replaced default Chromium/Java backends with WeasyPrint/pypdfium2.
 
-[Unreleased]: https://github.com/min9lin9/epub2pdf/compare/v0.3.3...HEAD
+[Unreleased]: https://github.com/min9lin9/epub2pdf/compare/v0.3.4...HEAD
+[0.3.4]: https://github.com/min9lin9/epub2pdf/compare/v0.3.3...v0.3.4
 [0.3.3]: https://github.com/min9lin9/epub2pdf/compare/v0.3.2...v0.3.3
 [0.3.2]: https://github.com/min9lin9/epub2pdf/compare/v0.3.1...v0.3.2
 [0.3.1]: https://github.com/min9lin9/epub2pdf/compare/v0.3.0...v0.3.1
