@@ -10,6 +10,7 @@ PageSize = Literal["A4", "Letter"]
 PdfExtractFormat = Literal[
     "markdown",
     "json",
+    "jsonl",
     "text",
     "html",
     "tables",

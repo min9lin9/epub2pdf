@@ -71,6 +71,19 @@ class Pypdfium2Extractor(Extractor):
                 _timed_stage_void("write_json", lambda: path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8"), timings)
                 outputs.append(str(path))
 
+            if "jsonl" in formats:
+                lines, _ = _timed_stage("extract_jsonl", lambda: self._extract_jsonl(document, page_indices), timings)
+                path = output_dir / f"{base_name}.jsonl"
+                _timed_stage_void(
+                    "write_jsonl",
+                    lambda: path.write_text(
+                        "".join(f"{json.dumps(line, ensure_ascii=False)}\n" for line in lines),
+                        encoding="utf-8",
+                    ),
+                    timings,
+                )
+                outputs.append(str(path))
+
             return outputs
         finally:
             document.close()
@@ -116,6 +129,17 @@ class Pypdfium2Extractor(Extractor):
             "extracted_pages": list(page_indices),
             "pages": pages,
         }
+
+    def _extract_jsonl(self, document: Any, page_indices: range) -> list[dict[str, Any]]:
+        lines = []
+        for idx in page_indices:
+            try:
+                textpage = document[idx].get_textpage()
+                text = textpage.get_text_bounded()
+                lines.append({"page": idx + 1, "text": text})
+            except Exception as exc:
+                lines.append({"page": idx + 1, "text": "", "error": str(exc)})
+        return lines
 
 
 def _parse_page_range(pages: str, total: int) -> range:
