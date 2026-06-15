@@ -63,6 +63,7 @@ def _build_convert_config(input_path: Path, batch_config: BatchConfig) -> Conver
         sidecar_json_path=(batch_config.output_dir / f"{stem}.json") if batch_config.sidecar_json else None,
         sidecar_html_path=(batch_config.output_dir / f"{stem}.html") if batch_config.sidecar_html else None,
         sidecar_markdown_path=(batch_config.output_dir / f"{stem}.md") if batch_config.sidecar_markdown else None,
+        sidecar_jsonl_path=(batch_config.output_dir / f"{stem}.jsonl") if batch_config.sidecar_jsonl else None,
         page_size=batch_config.page_size,
         margin_mm=batch_config.margin_mm,
         cover=batch_config.cover,

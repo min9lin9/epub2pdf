@@ -55,6 +55,7 @@ def build_parser() -> argparse.ArgumentParser:
     convert_parser.add_argument("--sidecar-json", help="Write structured conversion output JSON to this path.")
     convert_parser.add_argument("--sidecar-html", help="Write the normalized merged HTML to this path.")
     convert_parser.add_argument("--sidecar-markdown", help="Write a Markdown version of the EPUB to this path.")
+    convert_parser.add_argument("--sidecar-jsonl", help="Write an AI-friendly JSONL sidecar (one chapter per line) to this path.")
     convert_parser.add_argument("--page-size", choices=("A4", "Letter"), default="A4")
     convert_parser.add_argument("--margin-mm", type=int, default=12)
     convert_parser.add_argument("--cover", choices=("first", "none"), default="first")
@@ -70,6 +71,7 @@ def build_parser() -> argparse.ArgumentParser:
     batch_parser.add_argument("--sidecar-json", action="store_true", help="Write a JSON report next to each PDF.")
     batch_parser.add_argument("--sidecar-html", action="store_true", help="Write merged HTML next to each PDF.")
     batch_parser.add_argument("--sidecar-markdown", action="store_true", help="Write Markdown next to each PDF.")
+    batch_parser.add_argument("--sidecar-jsonl", action="store_true", help="Write an AI-friendly JSONL sidecar next to each PDF.")
     batch_parser.add_argument("--page-size", choices=("A4", "Letter"), default="A4")
     batch_parser.add_argument("--margin-mm", type=int, default=12)
     batch_parser.add_argument("--cover", choices=("first", "none"), default="first")
@@ -137,6 +139,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                     sidecar_json_path=Path(args.sidecar_json) if args.sidecar_json else None,
                     sidecar_html_path=Path(args.sidecar_html) if args.sidecar_html else None,
                     sidecar_markdown_path=Path(args.sidecar_markdown) if args.sidecar_markdown else None,
+                    sidecar_jsonl_path=Path(args.sidecar_jsonl) if args.sidecar_jsonl else None,
                     page_size=args.page_size,
                     margin_mm=args.margin_mm,
                     cover=args.cover,
@@ -159,6 +162,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                     sidecar_json=args.sidecar_json,
                     sidecar_html=args.sidecar_html,
                     sidecar_markdown=args.sidecar_markdown,
+                    sidecar_jsonl=args.sidecar_jsonl,
                     page_size=args.page_size,
                     margin_mm=args.margin_mm,
                     cover=args.cover,

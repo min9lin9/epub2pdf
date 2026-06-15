@@ -49,6 +49,7 @@ class ConvertConfig(InputConfig):
     sidecar_json_path: Path | None = None
     sidecar_html_path: Path | None = None
     sidecar_markdown_path: Path | None = None
+    sidecar_jsonl_path: Path | None = None
     page_size: PageSize = "A4"
     margin_mm: int = 12
     cover: CoverMode = "first"
@@ -70,6 +71,7 @@ class BatchConfig(BaseConfig):
     sidecar_json: bool = False
     sidecar_html: bool = False
     sidecar_markdown: bool = False
+    sidecar_jsonl: bool = False
     page_size: PageSize = "A4"
     margin_mm: int = 12
     cover: CoverMode = "first"

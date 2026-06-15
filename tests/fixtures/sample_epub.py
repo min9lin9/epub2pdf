@@ -33,6 +33,7 @@ def build_minimal_epub(
     *,
     title: str = "Minimal EPUB",
     identifier: str = "urn:minimal",
+    creators: list[str] | None = None,
     chapters: list[tuple[str, str, str]] | None = None,
 ) -> None:
     """Create a minimal valid EPUB at ``path``.
@@ -70,12 +71,15 @@ def build_minimal_epub(
     spine_block = "\n            ".join(spine_items)
     navmap_block = "\n            ".join(chapter_entries)
 
+    creator_block = "\n            ".join(f'<dc:creator>{c}</dc:creator>' for c in (creators or []))
+
     content_opf = dedent(
         f"""\
         <?xml version="1.0" encoding="UTF-8"?>
         <package version="3.0" xmlns="http://www.idpf.org/2007/opf">
           <metadata xmlns:dc="http://purl.org/dc/elements/1.1/">
             <dc:title>{title}</dc:title>
+            {creator_block}
             <dc:identifier>{identifier}</dc:identifier>
             <dc:language>en</dc:language>
           </metadata>
