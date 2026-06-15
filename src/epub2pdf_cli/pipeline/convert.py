@@ -12,6 +12,7 @@ from epub2pdf_cli.epub import read_epub
 from epub2pdf_cli.errors import ExitCode, StageError
 from epub2pdf_cli.html.builder import build_html
 from epub2pdf_cli.io_utils import sha256, write_json, write_text
+from epub2pdf_cli.jsonl import chapter_records, write_jsonl
 from epub2pdf_cli.markdown import build_markdown
 from epub2pdf_cli.pdf import validate_pdf
 from epub2pdf_cli.render import ENGINES
@@ -37,6 +38,13 @@ def convert_epub(config: ConvertConfig, engine: Renderer | None = None) -> dict[
         timings["markdown"] = _timed_stage_void(
             "markdown",
             lambda: write_text(markdown_path, build_markdown(book)),
+        )
+
+    if config.sidecar_jsonl_path:
+        jsonl_path = config.sidecar_jsonl_path
+        timings["jsonl"] = _timed_stage_void(
+            "jsonl",
+            lambda: write_jsonl(jsonl_path, chapter_records(book)),
         )
 
     render_options = RenderOptions(

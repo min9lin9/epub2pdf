@@ -99,6 +99,34 @@ class Epub2PdfCliTests(unittest.TestCase):
         self.assertIn("# Sample EPUB", sidecar_markdown.read_text(encoding="utf-8"))
         self.assertIn("안녕하세요", sidecar_markdown.read_text(encoding="utf-8"))
 
+    @unittest.skipUnless(find_spec("weasyprint") is not None, "WeasyPrint is not installed")
+    def test_convert_generates_jsonl_sidecar(self) -> None:
+        output_pdf = self.workdir / "output.pdf"
+        sidecar_jsonl = self.workdir / "output.jsonl"
+
+        result = self.run_cli(
+            "convert",
+            str(self.fixture),
+            "--engine",
+            "weasyprint",
+            "--output",
+            str(output_pdf),
+            "--sidecar-jsonl",
+            str(sidecar_jsonl),
+        )
+        self.assertEqual(result.returncode, 0, msg=result.stderr)
+        self.assertTrue(sidecar_jsonl.exists())
+
+        lines = sidecar_jsonl.read_text(encoding="utf-8").strip().split("\n")
+        self.assertGreaterEqual(len(lines), 1)
+        first = json.loads(lines[0])
+        self.assertEqual(first["record_type"], "chapter")
+        self.assertEqual(first["book_title"], "Sample EPUB")
+        self.assertIn("title", first)
+        self.assertIn("text", first)
+        self.assertIn("word_count", first)
+        self.assertIn("안녕하세요", first["text"])
+
     def test_convert_rejects_malformed_epub(self) -> None:
         output_pdf = self.workdir / "broken.pdf"
         result = self.run_cli("convert", str(self.bad_fixture), "--output", str(output_pdf))

@@ -53,6 +53,7 @@ def convert_epub(
     sidecar_json: bool = False,
     sidecar_html: bool = False,
     sidecar_markdown: bool = False,
+    sidecar_jsonl: bool = False,
     page_size: str = "A4",
     margin_mm: int = 12,
     cover: str = "first",
@@ -86,6 +87,8 @@ def convert_epub(
         args.extend(["--sidecar-html", str(Path(output_path).with_suffix(".html"))])
     if sidecar_markdown:
         args.extend(["--sidecar-markdown", str(Path(output_path).with_suffix(".md"))])
+    if sidecar_jsonl:
+        args.extend(["--sidecar-jsonl", str(Path(output_path).with_suffix(".jsonl"))])
     if force:
         args.append("--force")
     return _run_cli(*args)
@@ -102,6 +105,7 @@ def batch_convert(
     sidecar_json: bool = False,
     sidecar_html: bool = False,
     sidecar_markdown: bool = False,
+    sidecar_jsonl: bool = False,
     page_size: str = "A4",
     margin_mm: int = 12,
     cover: str = "first",
@@ -132,6 +136,8 @@ def batch_convert(
         args.append("--sidecar-html")
     if sidecar_markdown:
         args.append("--sidecar-markdown")
+    if sidecar_jsonl:
+        args.append("--sidecar-jsonl")
     if force:
         args.append("--force")
     return _run_cli(*args)

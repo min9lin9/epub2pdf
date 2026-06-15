@@ -81,7 +81,7 @@ class CliTests(unittest.TestCase):
         mock_convert.side_effect = StageError(
             "convert",
             "WeasyPrint is not installed.",
-            hint="Install it with: python3 -m pip install -e '.[weasyprint]'",
+            hint="Install it with: python3 -m pip install 'epub2pdf-cli[weasyprint]'",
         )
         stderr = StringIO()
         with patch("sys.stderr", stderr):
@@ -89,5 +89,5 @@ class CliTests(unittest.TestCase):
         self.assertNotEqual(code, 0)
         output = stderr.getvalue()
         self.assertIn("Error: [convert] WeasyPrint is not installed.", output)
-        self.assertIn("Install it with: python3 -m pip install -e '.[weasyprint]'", output)
+        self.assertIn("Install it with: python3 -m pip install 'epub2pdf-cli[weasyprint]'", output)
         self.assertIn("docs/troubleshooting.md", output)

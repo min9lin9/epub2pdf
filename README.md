@@ -12,7 +12,7 @@ The project is intentionally CLI-first. It does not run a long-lived server for 
 ## What It Does
 
 - Converts `.epub` files into selectable/searchable PDFs.
-- Writes optional EPUB sidecars as structured JSON, normalized HTML, and Markdown.
+- Writes optional EPUB sidecars as structured JSON, normalized HTML, Markdown, and AI-friendly JSONL (one chapter per line).
 - Inspects EPUB metadata, manifest, spine, TOC, and chapter order without rendering.
 - Extracts Markdown, JSON, text, or HTML from existing PDFs through native backends (no Java required by default).
 - Installs global Codex and OpenCode skills that call this CLI instead of duplicating conversion logic.
@@ -110,7 +110,8 @@ epub2pdf convert book.epub \
   --output book.pdf \
   --sidecar-json book.json \
   --sidecar-html book.html \
-  --sidecar-markdown book.md
+  --sidecar-markdown book.md \
+  --sidecar-jsonl book.jsonl
 ```
 
 Skip PDF validation to speed up batch pipelines:
@@ -126,6 +127,7 @@ epub2pdf batch *.epub \
   --output-dir out/ \
   --workers 4 \
   --sidecar-json \
+  --sidecar-jsonl \
   --force
 ```
 
@@ -167,6 +169,7 @@ Common options:
 - `--sidecar-json PATH`: write structured conversion metadata.
 - `--sidecar-html PATH`: write the normalized merged HTML used for rendering.
 - `--sidecar-markdown PATH`: write a Markdown version of the EPUB.
+- `--sidecar-jsonl PATH`: write an AI-friendly JSONL sidecar (one chapter per line).
 - `--page-size A4|Letter`: output page size. Default: `A4`.
 - `--margin-mm N`: page margin in millimeters. Default: `12`.
 - `--cover first|none`: include or skip the detected cover image. Default: `first`.
@@ -189,6 +192,7 @@ Common options:
 - `--sidecar-json`: write a JSON report next to each PDF.
 - `--sidecar-html`: write normalized merged HTML next to each PDF.
 - `--sidecar-markdown`: write Markdown next to each PDF.
+- `--sidecar-jsonl`: write an AI-friendly JSONL sidecar next to each PDF.
 - `--no-validate`: skip PDF validation after rendering.
 - `--force`: overwrite existing outputs.
 
@@ -256,6 +260,13 @@ On success, stdout prints one created output path per line.
 `convert --sidecar-html` writes the normalized merged HTML that was rendered into the PDF.
 
 `convert --sidecar-markdown` writes a Markdown version of the EPUB suitable for RAG ingestion.
+
+`convert --sidecar-jsonl` writes one JSON object per chapter, optimized for LLM/RAG pipelines:
+
+```jsonl
+{"record_type": "chapter", "book_title": "Book Title", "chapter_index": 1, "title": "Chapter 1", "text": "...", "word_count": 1200}
+{"record_type": "chapter", "book_title": "Book Title", "chapter_index": 2, "title": "Chapter 2", "text": "...", "word_count": 950}
+```
 
 `pdf-extract` writes Markdown/JSON/text/HTML files from an existing PDF. This is the path to use when the source is already a PDF rather than an EPUB.
 
