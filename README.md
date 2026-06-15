@@ -14,7 +14,7 @@ The project is intentionally CLI-first. It does not run a long-lived server for 
 - Converts `.epub` files into selectable/searchable PDFs.
 - Writes optional EPUB sidecars as structured JSON, normalized HTML, Markdown, and AI-friendly JSONL (one chapter per line).
 - Inspects EPUB metadata, manifest, spine, TOC, and chapter order without rendering.
-- Extracts Markdown, JSON, text, or HTML from existing PDFs through native backends (no Java required by default).
+- Extracts Markdown, JSON, JSONL, text, or HTML from existing PDFs through native backends (no Java required by default).
 - Installs global Codex and OpenCode skills that call this CLI instead of duplicating conversion logic.
 
 ## Requirements
@@ -142,7 +142,7 @@ Extract Markdown and JSON from an existing PDF:
 ```bash
 epub2pdf pdf-extract book.pdf \
   --output-dir book_extracted \
-  --format markdown,json
+  --format markdown,json,jsonl
 ```
 
 Use a specific extraction backend:
@@ -216,7 +216,7 @@ Common options:
 
 - `-o, --output-dir DIR`: output directory. Defaults to `<pdf-stem>_extracted`.
 - `--engine pypdfium2|docling|pdfplumber|opendataloader`: extraction backend. Default: `pypdfium2`.
-- `--format LIST`: comma-separated formats. Default: `markdown,json`.
+- `--format LIST`: comma-separated formats. Default: `markdown,json`. Supported: `markdown`, `json`, `jsonl` (pypdfium2 only), `text`, `html`, `tables`.
 - `--pages SPEC`: page selection, for example `1,3,5-7`.
 - `--password`: password for encrypted PDF files.
 - `--use-struct-tree`: use tagged PDF structure when available.
@@ -268,7 +268,14 @@ On success, stdout prints one created output path per line.
 {"record_type": "chapter", "book_title": "Book Title", "chapter_index": 2, "title": "Chapter 2", "text": "...", "word_count": 950}
 ```
 
-`pdf-extract` writes Markdown/JSON/text/HTML files from an existing PDF. This is the path to use when the source is already a PDF rather than an EPUB.
+`pdf-extract` writes Markdown/JSON/JSONL/text/HTML files from an existing PDF. This is the path to use when the source is already a PDF rather than an EPUB.
+
+`pdf-extract --format jsonl` writes one JSON object per page, optimized for LLM/RAG pipelines:
+
+```jsonl
+{"page": 1, "text": "..."}
+{"page": 2, "text": "..."}
+```
 
 ## Programmatic API
 

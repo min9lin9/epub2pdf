@@ -184,6 +184,33 @@ class Epub2PdfCliTests(unittest.TestCase):
         self.assertNotEqual(second_result.returncode, 0)
         self.assertIn("[pdf-extract]", second_result.stderr)
 
+    @unittest.skipUnless(find_spec("weasyprint") is not None, "WeasyPrint is not installed")
+    def test_pdf_extract_generates_jsonl(self) -> None:
+        output_pdf = self.workdir / "extract-source-jsonl.pdf"
+        convert_result = self.run_cli("convert", str(self.fixture), "--engine", "weasyprint", "--output", str(output_pdf))
+        self.assertEqual(convert_result.returncode, 0, msg=convert_result.stderr)
+
+        output_dir = self.workdir / "extract-output-jsonl"
+        extract_result = self.run_cli(
+            "pdf-extract",
+            str(output_pdf),
+            "--output-dir",
+            str(output_dir),
+            "--format",
+            "jsonl",
+        )
+        self.assertEqual(extract_result.returncode, 0, msg=extract_result.stderr)
+
+        output_paths = [Path(line.strip()) for line in extract_result.stdout.splitlines() if line.strip()]
+        jsonl_path = next((path for path in output_paths if path.suffix == ".jsonl"), None)
+        self.assertIsNotNone(jsonl_path, msg=extract_result.stdout)
+
+        lines = jsonl_path.read_text(encoding="utf-8").strip().split("\n")
+        self.assertGreaterEqual(len(lines), 1)
+        first = json.loads(lines[0])
+        self.assertIn("page", first)
+        self.assertIn("text", first)
+
     @unittest.skipUnless(find_spec("opendataloader_pdf") is not None, "opendataloader-pdf is not installed")
     def test_pdf_extract_with_opendataloader_legacy_engine(self) -> None:
         output_pdf = self.workdir / "extract-source.pdf"

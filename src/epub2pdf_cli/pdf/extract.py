@@ -91,6 +91,7 @@ def find_extract_outputs(input_path: Path, output_dir: Path, formats: Sequence[s
 def planned_extract_paths(input_path: Path, output_dir: Path, formats: Sequence[str]) -> list[Path]:
     extension_map = {
         "json": ".json",
+        "jsonl": ".jsonl",
         "text": ".txt",
         "html": ".html",
         "pdf": ".pdf",

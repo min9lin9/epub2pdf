@@ -17,6 +17,7 @@ LOGGER = logging.getLogger(__name__)
 def extract_pdf(config: PdfExtractConfig) -> dict[str, Any]:
     _check_input_path(config.input_path, suffix=".pdf")
     _check_extract_outputs(config)
+    _check_jsonl_engine(config)
 
     timings: dict[str, float] = {}
     start = time.perf_counter()
@@ -63,3 +64,12 @@ def _check_extract_outputs(config: PdfExtractConfig) -> None:
     if existing:
         formatted = ", ".join(str(path) for path in existing)
         raise StageError("pdf-extract", f"Output already exists: {formatted}. Use --force to overwrite.", exit_code=ExitCode.OUTPUT_EXISTS)
+
+
+def _check_jsonl_engine(config: PdfExtractConfig) -> None:
+    if "jsonl" in config.formats and config.engine != "pypdfium2":
+        raise StageError(
+            "pdf-extract",
+            "JSONL output is currently only supported with the pypdfium2 extractor.",
+            exit_code=ExitCode.USAGE,
+        )

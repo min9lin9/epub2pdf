@@ -24,6 +24,7 @@ from epub2pdf_cli.render import ENGINES
 PDF_EXTRACT_FORMATS: tuple[PdfExtractFormat, ...] = (
     "markdown",
     "json",
+    "jsonl",
     "text",
     "html",
     "tables",
@@ -84,14 +85,14 @@ def build_parser() -> argparse.ArgumentParser:
     inspect_parser.add_argument("--json", help="Write inspection output JSON to this path. Defaults to stdout.")
     inspect_parser.add_argument("--verbose", action="store_true", help="Enable verbose logs.")
 
-    pdf_parser = subparsers.add_parser("pdf-extract", help="Extract Markdown/JSON/HTML from a PDF.")
+    pdf_parser = subparsers.add_parser("pdf-extract", help="Extract Markdown/JSON/HTML/JSONL from a PDF.")
     pdf_parser.add_argument("input", help="Path to the input .pdf file.")
     pdf_parser.add_argument("-o", "--output-dir", help="Directory for extracted files. Defaults to <pdf-stem>_extracted.")
     pdf_parser.add_argument("--engine", choices=("pypdfium2", "docling", "pdfplumber", "opendataloader", "ocr"), default="pypdfium2", help=_EXTRACT_ENGINE_HELP)
     pdf_parser.add_argument(
         "--format",
         default="markdown,json",
-        help="Comma-separated output formats. Default: markdown,json.",
+        help="Comma-separated output formats. Default: markdown,json. Supported: markdown, json, jsonl (pypdfium2 only), text, html, tables.",
     )
     pdf_parser.add_argument("--pages", help='Pages to extract, for example "1,3,5-7".')
     pdf_parser.add_argument("--password", help="Password for encrypted PDF files.")
