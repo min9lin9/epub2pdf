@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import posixpath
+import re
 import zipfile
 from typing import Any
 from xml.etree import ElementTree as ET
@@ -21,8 +22,22 @@ def read_required(archive: zipfile.ZipFile, path: str, *, stage: str) -> bytes:
         raise StageError(stage, f"Missing required EPUB resource: {path}") from exc
 
 
+def _ensure_opf_namespace(opf_bytes: bytes) -> bytes:
+    """Inject the OPF namespace declaration if the document uses the opf prefix without declaring it."""
+    text = opf_bytes.decode("utf-8", errors="replace")
+    if "xmlns:opf" in text or "opf:" not in text:
+        return opf_bytes
+    return re.sub(
+        r'(<package\b[^>]*?)(>)',
+        r'\1 xmlns:opf="http://www.idpf.org/2007/opf"\2',
+        text,
+        count=1,
+    ).encode("utf-8")
+
+
 def parse_opf(archive: zipfile.ZipFile, rootfile_path: str) -> tuple[ET.Element, str]:
     opf_bytes = read_required(archive, rootfile_path, stage="opf")
+    opf_bytes = _ensure_opf_namespace(opf_bytes)
     try:
         package = ET.fromstring(opf_bytes)
     except ET.ParseError as exc:
